@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iframe getinfo</title>
+</head>
+
+<body>
+    <h1>Iframe getinfo</h1>
+    <script>
+    window.addEventListener("message", async function(event) {
+        const data = event.data;
+        console.log("iframeServer : Message received :", data);
+        try {
+            let responseData = await sendData(data);
+            console.log(responseData);
+            if (responseData && responseData.requestUrl) {
+                window.location = responseData.requestUrl;
+            } else {
+                console.error("requestUrl not found in response data");
+            }
+        } catch (error) {
+            console.error("Error in processing message:", error);
+        }
+    });
+
+    async function sendData(data) {
+        const url = '/gettarget';
+        try {
+            const response = await fetch(url, { // fetch의 Promise를 기다림
+                method: 'POST', 
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            });
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            
+            const responseData = await response.json(); // JSON으로 변환된 응답 대기
+            console.log('iframeServer : Success :', responseData);
+            return responseData; // 응답 데이터 반환
+        } catch (error) {
+            console.error('Error:', error); // 에러 처리
+            throw error; // 에러를 다시 던져서 호출한 곳에서 처리하게 함
+        }
+    }
+    </script>
+</body>
+
+</html>
