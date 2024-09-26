@@ -10,11 +10,11 @@ type RequestData struct {
 	AccessToken   string            `json:"accessToken"`
 	WorkspaceInfo map[string]string `json:"workspaceInfo"`
 	ProjectInfo   map[string]string `json:"projectInfo"`
-	RequestUrl    string            `json:"requestUrl"`
+	OperationId   string            `json:"operationId"`
 }
 
 type ResponseData struct {
-	RequestUrl string `json:"requestUrl"`
+	OperationId string `json:"operationId"`
 }
 
 func main() {
@@ -33,7 +33,7 @@ func main() {
 		// 이곳에서 필요한 인증절차를 진행합니다.
 
 		response := ResponseData{
-			RequestUrl: reqData.RequestUrl,
+			OperationId: reqData.OperationId,
 		}
 		return c.JSON(http.StatusOK, response)
 	})
